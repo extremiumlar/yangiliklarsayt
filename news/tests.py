@@ -3,26 +3,26 @@ from django.urls import reverse
 from .models import Post
 # Create your tests here.
 
-class PostModelTest(TestCase):
+class PostTest(TestCase):
     def setUp(self):
-        Post.objects.create(title='mavzu',text='yangiliklar matni')
-    def test_test_content(self):
+        Post.objects.create(title = 'mavzu', text = 'yangilik matni' , text_muallif = "cheklanma")
+    def test_text_content(self):
         post = Post.objects.get(id=1)
-        expected_object_title = f'{post.title}'
-        expected_object_text = f'{post.text}'
-        self.assertEqual(expected_object_title,'mavzu')
-        self.assertEqual(expected_object_text,'yangiliklar matni')
+        expected_object_title = f"{post.title}"
+        expected_object_text = f"{post.text}"
+        expected_object_text_muallif = f"{post.text_muallif}"
+        self.assertEqual(expected_object_title, post.title)
+        self.assertEqual(expected_object_text , post.text)
+        self.assertEqual(expected_object_text_muallif , post.text_muallif)
 
 class HomePageViewTest(TestCase):
-    def setUp(self):
-        Post.objects.create(title='mavzu 2',text='boshqa yangilik')
-    def test_views_url_exists_at_proper_location(self):
-        resp = self.client.get('/')
+    def setUp(self) :
+        Post.objects.create(title = 'mavzu 2', text = 'yangilik matni 2' , text_muallif = "cheklanma")
+    def test_view_url_by_name(self):
+        resp = self.client.get(reverse('home'))
         self.assertEqual(resp.status_code, 200)
-    def test_view_url_exists_at_desired_location(self):
+    def test_view_correct_template(self):
         resp = self.client.get(reverse('home'))
-        self.assertEqual(resp.status_code,200)
-    def test_view_uses_correct_template(self):
-        resp = self.client.get(reverse('home'))
-        self.assertEqual(resp.status_code,200)
-        self.assertTemplateUsed(resp,'home.html')
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'home.html')
+
